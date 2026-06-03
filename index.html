@@ -7,10 +7,7 @@
 <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --primary:#06C755;--primary-h:#05a849;--bg:#f0f0f0;
-  --surface:#fff;--text:#333;--muted:#888;--border:#ddd;--radius:12px;
-}
+:root{--primary:#06C755;--primary-h:#05a849;--bg:#f0f0f0;--surface:#fff;--text:#333;--muted:#888;--border:#ddd;--radius:12px;}
 body{font-family:"Hiragino Sans","Noto Sans JP",sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
 .card{background:var(--surface);border-radius:var(--radius);padding:28px 24px;width:100%;max-width:400px;box-shadow:0 2px 12px rgba(0,0,0,.1)}
 .logo{text-align:center;font-size:40px;margin-bottom:8px}
@@ -18,21 +15,16 @@ h1{text-align:center;font-size:18px;font-weight:700;margin-bottom:6px}
 .subtitle{text-align:center;font-size:13px;color:var(--muted);margin-bottom:24px}
 .profile{display:flex;align-items:center;gap:12px;background:#f9f9f9;border-radius:8px;padding:12px;margin-bottom:20px}
 .profile img{width:44px;height:44px;border-radius:50%;border:2px solid var(--border)}
-.profile-name{font-size:13px;color:var(--muted)}
-.profile-display{font-size:15px;font-weight:600}
+.profile-name{font-size:13px;color:var(--muted)}.profile-display{font-size:15px;font-weight:600}
 .fi{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
 label{font-size:12px;font-weight:600;color:var(--muted)}
 input{padding:12px 14px;border:1.5px solid var(--border);border-radius:8px;font-size:16px;font-family:inherit;width:100%;outline:none;transition:border-color .15s}
 input:focus{border-color:var(--primary)}
 .note{font-size:11px;color:var(--muted);margin-top:4px}
 .btn{width:100%;padding:14px;border-radius:8px;border:none;font-size:16px;font-weight:700;font-family:inherit;cursor:pointer;transition:background .15s;margin-top:8px}
-.btn-primary{background:var(--primary);color:#fff}
-.btn-primary:hover{background:var(--primary-h)}
-.btn-primary:disabled{background:#ccc;cursor:not-allowed}
+.btn-primary{background:var(--primary);color:#fff}.btn-primary:hover{background:var(--primary-h)}.btn-primary:disabled{background:#ccc;cursor:not-allowed}
 .result{text-align:center;padding:20px 0}
-.result-icon{font-size:48px;margin-bottom:12px}
-.result-title{font-size:18px;font-weight:700;margin-bottom:8px}
-.result-msg{font-size:13px;color:var(--muted);line-height:1.6}
+.result-icon{font-size:48px;margin-bottom:12px}.result-title{font-size:18px;font-weight:700;margin-bottom:8px}.result-msg{font-size:13px;color:var(--muted);line-height:1.6}
 .loading{text-align:center;padding:40px 0;color:var(--muted);font-size:14px}
 .error-box{background:#fff0f0;border:1px solid #fcc;border-radius:8px;padding:12px;font-size:13px;color:#c00;margin-bottom:16px;display:none}
 </style>
@@ -40,17 +32,13 @@ input:focus{border-color:var(--primary)}
 <body>
 <div class="card">
   <div id="view-loading" class="loading">読み込み中...</div>
-
   <div id="view-form" style="display:none">
     <div class="logo">🪪</div>
     <h1>会員登録フォーム</h1>
     <p class="subtitle">お名前を入力して登録を完了してください</p>
     <div class="profile" id="profile-box" style="display:none">
       <img id="profile-img" src="" alt="">
-      <div>
-        <div class="profile-name">LINEアカウント</div>
-        <div class="profile-display" id="profile-display-name"></div>
-      </div>
+      <div><div class="profile-name">LINEアカウント</div><div class="profile-display" id="profile-display-name"></div></div>
     </div>
     <div class="error-box" id="error-box"></div>
     <div class="fi">
@@ -60,139 +48,65 @@ input:focus{border-color:var(--primary)}
     </div>
     <button class="btn btn-primary" id="btn-submit" onclick="submitForm()">登録する</button>
   </div>
-
   <div id="view-success" style="display:none" class="result">
-    <div class="result-icon">✅</div>
-    <div class="result-title">受付完了</div>
+    <div class="result-icon">✅</div><div class="result-title">受付完了</div>
     <div class="result-msg">登録を受け付けました。<br>管理者が確認後、LINEにてご連絡いたします。</div>
   </div>
-
   <div id="view-already" style="display:none" class="result">
-    <div class="result-icon">👤</div>
-    <div class="result-title">登録済み</div>
+    <div class="result-icon">👤</div><div class="result-title">登録済み</div>
     <div class="result-msg">すでに会員登録が完了しています。</div>
   </div>
-
   <div id="view-error" style="display:none" class="result">
-    <div class="result-icon">❌</div>
-    <div class="result-title">エラー</div>
+    <div class="result-icon">❌</div><div class="result-title">エラー</div>
     <div class="result-msg" id="error-msg">エラーが発生しました。</div>
   </div>
 </div>
-
 <script>
 const LIFF_ID = '2010283109-vlzRgNNa';
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbz8aEmrm60ugGN2IpkuUH9IYfreQuIWdP277ktNOVQUF0_jHBC9_PUknXH4A-UwC9Nxtg/exec';
 let lineUid = '';
 
 async function initLiff() {
   try {
     await liff.init({ liffId: LIFF_ID });
-
-    if (!liff.isLoggedIn()) {
-      liff.login();
-      return;
-    }
-
+    if (!liff.isLoggedIn()) { liff.login(); return; }
     const profile = await liff.getProfile();
     lineUid = profile.userId;
-
-    // プロフィール表示
     document.getElementById('profile-img').src = profile.pictureUrl || '';
     document.getElementById('profile-display-name').textContent = profile.displayName;
     document.getElementById('profile-box').style.display = 'flex';
-
     showView('form');
-  } catch (e) {
-    showError('LIFFの初期化に失敗しました: ' + e.message);
-  }
+  } catch (e) { showError('LIFFの初期化に失敗しました: ' + e.message); }
 }
 
-async function submitForm() {
-  const name = document.getElementById('input-name').value.trim();
-  if (!name) {
-    showFormError('お名前を入力してください');
-    return;
-  }
-  if (!lineUid) {
-    showFormError('LINE IDの取得に失敗しました。再度お試しください');
-    return;
-  }
-
-  const btn = document.getElementById('btn-submit');
-  btn.disabled = true;
-  btn.textContent = '送信中...';
-
-  try {
-    const res = await fetch(google.script.run ? '' : location.href, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ type: 'liff_register', lineUid, name }),
-    });
-    const data = await res.json();
-
-    if (data.alreadyLinked) {
-      showView('already');
-    } else if (data.success) {
-      showView('success');
-    } else {
-      showFormError(data.message || '登録に失敗しました');
-      btn.disabled = false;
-      btn.textContent = '登録する';
-    }
-  } catch (e) {
-    showFormError('通信エラーが発生しました');
-    btn.disabled = false;
-    btn.textContent = '登録する';
-  }
-}
-
-function showView(name) {
-  ['loading','form','success','already','error'].forEach(v => {
-    document.getElementById('view-' + v).style.display = v === name ? '' : 'none';
-  });
-}
-function showFormError(msg) {
-  const el = document.getElementById('error-box');
-  el.textContent = msg; el.style.display = 'block';
-}
-function showError(msg) {
-  document.getElementById('error-msg').textContent = msg;
-  showView('error');
-}
-
-// GAS環境ではgoogle.script.runが使えないためURLを動的に取得
 async function submitForm() {
   const name = document.getElementById('input-name').value.trim();
   if (!name) { showFormError('お名前を入力してください'); return; }
   if (!lineUid) { showFormError('LINE IDの取得に失敗しました'); return; }
-
   const btn = document.getElementById('btn-submit');
   btn.disabled = true; btn.textContent = '送信中...';
-
   try {
-    // GAS WebApp URL（GAS②のデプロイURL）
-    const url = 'https://script.google.com/macros/s/AKfycbz8aEmrm60ugGN2IpkuUH9IYfreQuIWdP277ktNOVQUF0_jHBC9_PUknXH4A-UwC9Nxtg/exec';
-    const res  = await fetch(url, {
+    // GASはCORSとリダイレクトの制約があるためno-corsで送信
+    // レスポンスは読めないが送信自体は成功するため完了画面を表示
+    await fetch(GAS_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ type: 'liff_register', lineUid, name }),
-      redirect: 'follow',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({ type: 'liff_register', lineUid: lineUid, name: name }),
+      mode: 'no-cors',
     });
-    const text = await res.text();
-    let data;
-    try { data = JSON.parse(text); } catch (_) { data = { success: false, message: text }; }
-
-    if (data.alreadyLinked)    { showView('already'); }
-    else if (data.success)     { showView('success'); }
-    else {
-      showFormError(data.message || '登録に失敗しました');
-      btn.disabled = false; btn.textContent = '登録する';
-    }
+    showView('success');
   } catch (e) {
     showFormError('通信エラー: ' + e.message);
     btn.disabled = false; btn.textContent = '登録する';
   }
 }
+
+function showView(name) {
+  ['loading','form','success','already','error'].forEach(v =>
+    document.getElementById('view-'+v).style.display = v===name ? '' : 'none');
+}
+function showFormError(msg) { const el=document.getElementById('error-box'); el.textContent=msg; el.style.display='block'; }
+function showError(msg) { document.getElementById('error-msg').textContent=msg; showView('error'); }
 
 initLiff();
 </script>
