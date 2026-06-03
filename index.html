@@ -171,7 +171,7 @@ async function submitForm() {
 
   try {
     // GAS WebApp URL（GAS②のデプロイURL）
-    const url = location.href.split('?')[0];
+    const url = 'https://script.google.com/macros/s/AKfycbz8aEmrm60ugGN2IpkuUH9IYfreQuIWdP277ktNOVQUF0_jHBC9_PUknXH4A-UwC9Nxtg/exec';
     const res  = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
