@@ -65,6 +65,7 @@ input:focus{border-color:var(--primary)}
 const LIFF_ID = '2010283109-vlzRgNNa';
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbz8aEmrm60ugGN2IpkuUH9IYfreQuIWdP277ktNOVQUF0_jHBC9_PUknXH4A-UwC9Nxtg/exec';
 let lineUid = '';
+let lineDisplayName = '';
 
 async function initLiff() {
   try {
@@ -72,6 +73,7 @@ async function initLiff() {
     if (!liff.isLoggedIn()) { liff.login(); return; }
     const profile = await liff.getProfile();
     lineUid = profile.userId;
+    lineDisplayName = profile.displayName; // LINE表示名をLIFF SDKから直接取得
     document.getElementById('profile-img').src = profile.pictureUrl || '';
     document.getElementById('profile-display-name').textContent = profile.displayName;
     document.getElementById('profile-box').style.display = 'flex';
@@ -86,12 +88,16 @@ async function submitForm() {
   const btn = document.getElementById('btn-submit');
   btn.disabled = true; btn.textContent = '送信中...';
   try {
-    // GASはCORSとリダイレクトの制約があるためno-corsで送信
-    // レスポンスは読めないが送信自体は成功するため完了画面を表示
+    // LINE表示名もLIFFから取得してGASに送信
     await fetch(GAS_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'text/plain' },
-      body: JSON.stringify({ type: 'liff_register', lineUid: lineUid, name: name }),
+      body: JSON.stringify({
+        type: 'liff_register',
+        lineUid: lineUid,
+        lineName: lineDisplayName, // LINE表示名を追加
+        name: name
+      }),
       mode: 'no-cors',
     });
     showView('success');
